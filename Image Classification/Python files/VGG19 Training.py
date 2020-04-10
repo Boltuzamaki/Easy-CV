@@ -65,7 +65,7 @@ path = '//kaggle//input//alien-vs-predator-images//data//train'
 CheckDimsImage(path)
 
 
-# ### Function which helps to find the nuber of images in each class and detrmine the training weight according to it
+# ### Function which helps to find the number of images in each class and detrmine the training weight according to it
 
 # In[ ]:
 
@@ -147,7 +147,7 @@ output_path = '//kaggle//working'
 # In[ ]:
 
 
-def VGGModel(trainable=None):
+def VGGModel(trainable=None):     #  keep trainable 20 for keeing all the VGG layer un trainable
     
     
     model = keras.applications.VGG19(
@@ -220,19 +220,42 @@ def VGGModel(trainable=None):
     )
 
 
-    new_model.fit_generator(
+    fit_history = new_model.fit_generator(
         train_generator,
         steps_per_epoch=len(train_generator.filenames) // batch_size,
         epochs=epoch,
         validation_data=validation_generator,
         validation_steps=len(train_generator.filenames) // batch_size,
         class_weight=n,
+        shuffle = True,
         callbacks=[
             EarlyStopping(patience=patience, restore_best_weights=True),
             ReduceLROnPlateau(patience=patience)
-        ])
-    os.chdir(output_path)    
+        ])   
+    print(fit_history.history.keys())
+    plt.figure(1, figsize = (15,8)) 
+    
+    plt.subplot(221)  
+    plt.plot(fit_history.history['accuracy'])  
+    plt.plot(fit_history.history['val_accuracy'])  
+    plt.title('model accuracy')  
+    plt.ylabel('accuracy')  
+    plt.xlabel('epoch')  
+    plt.legend(['train', 'valid']) 
+
+    plt.subplot(222)  
+    plt.plot(fit_history.history['loss'])  
+    plt.plot(fit_history.history['val_loss'])  
+    plt.title('model loss')  
+    plt.ylabel('loss')  
+    plt.xlabel('epoch')  
+    plt.legend(['train', 'valid']) 
+
+    plt.show() 
+    
+    os.chdir(output_path) 
     model.save("model.h5")    
+      
     
 
 
