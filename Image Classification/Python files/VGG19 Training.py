@@ -65,7 +65,7 @@ path = '//kaggle//input//alien-vs-predator-images//data//train'
 CheckDimsImage(path)
 
 
-# ### Function which helps to find the number of images in each class and detrmine the training weight according to it
+# ### Function which helps to find the number of images in each class and determine the training weight according to it
 
 # In[ ]:
 
